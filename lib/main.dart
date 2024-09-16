@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
               scrolledUnderElevation: 0.00,
             ),
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.indigo,
+            ),
             useMaterial3: true,
             platform: TargetPlatform.iOS),
         debugShowCheckedModeBanner: false,
