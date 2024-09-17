@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173094524096",
+    "project_id": "chai-df164",
+    "storage_bucket": "chai-df164.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173094524096:android:6901a6bd21ec1965d70925",
+        "android_client_info": {
+          "package_name": "com.example.my_resto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTAgKOI16TsPQ9TJ6Y9SegLPgpwZfGvg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
