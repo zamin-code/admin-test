@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_resto/common.dart';
@@ -42,28 +44,6 @@ class HomeScreen extends StatelessWidget {
                       return Container(
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                          // child: CachedNetworkImage(
-                          //   imageUrl: url,
-                          //   fit: BoxFit.fill,
-                          //   width: 1000.0,
-                          //   imageBuilder: (context, imageProvioder) {
-                          //     return Container(
-                          //       decoration: BoxDecoration(
-                          //         image: DecorationImage(image: imageProvioder, fit: BoxFit.fill),
-                          //       ),
-                          //     );
-                          //   },
-                          //   placeholder: (context, url) => Container(
-                          //       width: 50,
-                          //       height: 50,
-                          //       alignment: Alignment.center,
-                          //       child: SizedBox(
-                          //         height: 30,
-                          //         width: 30,
-                          //         child: CircularProgressIndicator(),
-                          //       )),
-                          //   errorWidget: (context, url, error) => Icon(Icons.error),
-                          // ),
                           child: Image.asset(
                             url,
                             fit: BoxFit.fitWidth,
@@ -170,33 +150,115 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     gapHC(15),
-                    GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 10, crossAxisCount: 2, childAspectRatio: .8, crossAxisSpacing: 10),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 7,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(border: Border.all(width: .1), borderRadius: BorderRadius.circular(10)),
-                          alignment: Alignment.center,
-                          child: Column(
-                            children: [
-                              Container(
-                                height: 150,
-                                margin: EdgeInsets.symmetric(horizontal: 5),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                  "assets/item_image/burger.jpg",
-                                ))),
-                              ),
-                              Text("Buger"),
-                              Text("150")
-                            ],
-                          ),
+                    StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection("Items").snapshots(),
+                      builder: (context, snapshot) {
+                        return GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5, crossAxisCount: 2, childAspectRatio: .7, crossAxisSpacing: 5),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            if (snapshot.hasData) {
+                              return Card(
+                                color: Colors.white,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                  width: 230,
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 150,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                            image: DecorationImage(
+                                                fit: BoxFit.fill,
+                                                image: NetworkImage(
+                                                  snapshot.data!.docs[index]["rep_image"],
+                                                ))),
+                                      ),
+                                      gapHC(10),
+                                      Text(
+                                        snapshot.data!.docs[index]["item_name"],
+                                        style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      gapHC(5),
+                                      double.tryParse(snapshot.data!.docs[index]["offer_perc"].toString())! <= 0
+                                          ? Text(
+                                              "₹ ${double.tryParse(snapshot.data!.docs[index]["price"])?.toStringAsFixed(2)}",
+                                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, height: 1, color: Colors.orange),
+                                            )
+                                          : Row(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                Stack(
+                                                  children: [
+                                                    Text(
+                                                      "₹ ${double.tryParse(snapshot.data!.docs[index]["sell_amount"].toString())?.toStringAsFixed(2)}",
+                                                      style: TextStyle(decorationThickness: 2.0, fontSize: 11, color: Colors.orange),
+                                                    ),
+                                                    Positioned.fill(
+                                                        bottom: 1,
+                                                        child: Divider(
+                                                          color: Colors.orange,
+                                                          thickness: 2,
+                                                        ))
+                                                  ],
+                                                ),
+                                                gapWC(5),
+                                                Text(
+                                                  "₹${snapshot.data!.docs[index]["offer_perc"].toString()}",
+                                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, height: 1, color: Colors.black),
+                                                ),
+                                                gapWC(10),
+                                                Column(
+                                                  children: [
+                                                    Center(
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color: Colors.indigo),
+                                                        child: Text(
+                                                          "${snapshot.data!.docs[index]["offer_perc"].toString()}% OFF",
+                                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 7),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                      gapHC(5),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: AutoSizeText(
+                                              snapshot.data!.docs[index]["details"].toString(),
+                                              maxLines: 2,
+                                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, height: 1, color: Colors.grey),
+                                            ),
+                                          ),
+                                          gapWC(10),
+                                          const CircleAvatar(
+                                              radius: 25,
+                                              backgroundColor: Color(0xFF520E0E),
+                                              child: Icon(
+                                                Icons.add_shopping_cart_outlined,
+                                                color: Colors.white,
+                                              ))
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {}
+                          },
                         );
                       },
-                    ),
+                    )
                   ],
                 ),
               )
