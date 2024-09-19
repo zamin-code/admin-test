@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:my_resto/screens/bottom_navigation/bottom_screen.dart';
 
@@ -25,6 +26,8 @@ class MyApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(
               elevation: 0,
               color: Colors.white,
+              systemOverlayStyle: SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark, statusBarColor: Colors.white),
+              iconTheme: IconThemeData(color: Colors.black),
               scrolledUnderElevation: 0.00,
             ),
             colorScheme: ColorScheme.fromSeed(
