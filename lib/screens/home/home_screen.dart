@@ -190,8 +190,8 @@ class HomeScreen extends StatelessWidget {
                                           onTap: () {
                                             Get.to(
                                               () => DetailedShopScreen(
-                                                ItemData: snapshot.data!.docs[index],
-                                                indexx: index,
+                                                itemData: snapshot.data!.docs[index],
+                                                index: index,
                                               ),
                                               transition: Transition.fadeIn,
                                             );

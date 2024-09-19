@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  List imgAds = ["assets/test_images/1.png", "assets/test_images/2.png", "assets/test_images/3.png"];
+  List imgAds = ["assets/test_images/1.jpg", "assets/test_images/2.jpg", "assets/test_images/3.jpg"];
   List category = ["Fresh Juices", "Milk Shake", "Ice Cream Shake", "Lassi", "Mojitos", "Hot Beverages", "Cold Beverages", "Burgers", "Sandwiches", "Roll Sandwiches", "Starters", "Club Sandwiches"];
   List menuItems = [
     {
